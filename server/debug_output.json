@@ -1,0 +1,32 @@
+[
+  {
+    "id": "6992fca19b7330fa97614e24",
+    "documents": {
+      "tenthMarksheet": {
+        "url": "https://res.cloudinary.com/dfos72c3g/image/upload/v1771240668/hostel/admissions/ygxzv3rvsyot02k3xzkw.jpg",
+        "publicId": "hostel/admissions/ygxzv3rvsyot02k3xzkw"
+      },
+      "twelfthMarksheet": {
+        "url": "https://res.cloudinary.com/dfos72c3g/image/upload/v1771240667/hostel/admissions/edw6h31kjh6xmuwlb82h.jpg",
+        "publicId": "hostel/admissions/edw6h31kjh6xmuwlb82h"
+      },
+      "incomeCertificate": {
+        "url": "https://res.cloudinary.com/dfos72c3g/image/upload/v1771240667/hostel/admissions/nkgujhqjjshzbttxbxmy.jpg",
+        "publicId": "hostel/admissions/nkgujhqjjshzbttxbxmy"
+      },
+      "aadhaarCard": {
+        "url": "https://res.cloudinary.com/dfos72c3g/image/upload/v1771240667/hostel/admissions/hymyrcodgk6m0vtn5j4d.jpg",
+        "publicId": "hostel/admissions/hymyrcodgk6m0vtn5j4d"
+      }
+    }
+  },
+  {
+    "id": "6991eb29b5e6a66726a803c3",
+    "documents": {
+      "tenthMarksheet": "uploads/admissions/tenthMarksheet-1771170601439-857512834.pdf",
+      "twelfthMarksheet": "uploads/admissions/twelfthMarksheet-1771170601458-453831438.pdf",
+      "incomeCertificate": "uploads/admissions/incomeCertificate-1771170601463-847451504.pdf",
+      "aadhaarCard": "uploads/admissions/aadhaarCard-1771170601466-711118949.pdf"
+    }
+  }
+]
