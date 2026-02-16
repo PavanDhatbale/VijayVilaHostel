@@ -41,7 +41,7 @@ const Admissions = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/admission`, {
+            const response = await fetch(`${API_BASE_URL}/api/admission`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -91,7 +91,7 @@ const Admissions = () => {
         try {
             setIsSubmitting(true);
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/admission/${appId}/${endpoint}`, {
+            const response = await fetch(`${API_BASE_URL}/api/admission/${appId}/${endpoint}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ const Admissions = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/admission/${appId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/admission/${appId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

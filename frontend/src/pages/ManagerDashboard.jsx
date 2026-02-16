@@ -48,13 +48,13 @@ const ManagerDashboard = () => {
         try {
             const token = localStorage.getItem('token');
             const [admissionsRes, summaryRes, activitiesRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/admission`, {
+                fetch(`${API_BASE_URL}/api/admission`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }),
-                fetch(`${API_BASE_URL}/manager/summary`, {
+                fetch(`${API_BASE_URL}/api/manager/summary`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }),
-                fetch(`${API_BASE_URL}/manager/activities`, {
+                fetch(`${API_BASE_URL}/api/manager/activities`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
             ]);
@@ -89,7 +89,7 @@ const ManagerDashboard = () => {
         if (!window.confirm('Are you sure you want to approve this admission?')) return;
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/admission/${admissionId}/approve`, {
+            const response = await fetch(`${API_BASE_URL}/api/admission/${admissionId}/approve`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -118,7 +118,7 @@ const ManagerDashboard = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/admission/${admissionId}/reject`, {
+            const response = await fetch(`${API_BASE_URL}/api/admission/${admissionId}/reject`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

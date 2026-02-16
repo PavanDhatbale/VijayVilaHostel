@@ -41,7 +41,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
             setLoading(true);
             const token = localStorage.getItem('token');
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-            const response = await fetch(`${API_BASE_URL}/public/config/gallery/${imageId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/public/config/gallery/${imageId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -93,7 +93,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
             }
 
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/public/config`, {
+            const response = await fetch(`${API_BASE_URL}/api/public/config`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`

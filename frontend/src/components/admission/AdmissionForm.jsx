@@ -94,7 +94,7 @@ const AdmissionForm = () => {
             formPayload.append('incomeCertificate', files.incomeCertificate);
             formPayload.append('aadhaarCard', files.aadhaarCard);
 
-            const response = await fetch(`${API_BASE_URL}/admission/apply`, {
+            const response = await fetch(`${API_BASE_URL}/api/admission/apply`, {
                 method: 'POST',
                 headers: {
                     // Do NOT set Content-Type, browser will set it with boundary

@@ -34,7 +34,7 @@ const MonitorMessages = () => {
     const fetchHistory = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/notices`, {
+            const response = await fetch(`${API_BASE_URL}/api/notices`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -61,7 +61,7 @@ const MonitorMessages = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/notices`, {
+            const response = await fetch(`${API_BASE_URL}/api/notices`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ const MonitorMessages = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/notices/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/notices/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -118,7 +118,7 @@ const MonitorMessages = () => {
     const handleMarkAsRead = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/notices/${id}/read`, {
+            const response = await fetch(`${API_BASE_URL}/api/notices/${id}/read`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

@@ -24,7 +24,7 @@ const MonitorDashboard = () => {
         const fetchSummary = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/monitor/summary`, {
+                const response = await fetch(`${API_BASE_URL}/api/monitor/summary`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -41,7 +41,7 @@ const MonitorDashboard = () => {
         const fetchActivities = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_BASE_URL}/monitor/activities`, {
+                const response = await fetch(`${API_BASE_URL}/api/monitor/activities`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

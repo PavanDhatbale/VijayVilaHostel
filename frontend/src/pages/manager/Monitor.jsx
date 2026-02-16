@@ -37,13 +37,13 @@ const ManagerMonitor = () => {
         try {
             const token = localStorage.getItem('token');
             const [monitorRes, historyRes, studentsRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/manager/monitor`, {
+                fetch(`${API_BASE_URL}/api/manager/monitor`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }),
-                fetch(`${API_BASE_URL}/manager/monitor-history`, {
+                fetch(`${API_BASE_URL}/api/manager/monitor-history`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }),
-                fetch(`${API_BASE_URL}/manager/students`, {
+                fetch(`${API_BASE_URL}/api/manager/students`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
             ]);
@@ -71,7 +71,7 @@ const ManagerMonitor = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/manager/assign-monitor/${studentId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/manager/assign-monitor/${studentId}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -94,7 +94,7 @@ const ManagerMonitor = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/manager/monitor-history/${historyId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/manager/monitor-history/${historyId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

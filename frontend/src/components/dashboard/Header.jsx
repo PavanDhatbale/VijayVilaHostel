@@ -15,7 +15,7 @@ const Header = ({ title }) => {
             if (!token) return;
 
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-            const response = await fetch(`${API_BASE_URL}/notices/unread-count`, {
+            const response = await fetch(`${API_BASE_URL}/api/notices/unread-count`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();

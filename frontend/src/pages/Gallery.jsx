@@ -46,7 +46,7 @@ const AddMediaModal = ({ isOpen, onClose, type, onMediaAdded }) => {
             formData.append('title', mediaData.title);
             formData.append('description', mediaData.description);
 
-            const response = await fetch(`${API_BASE_URL}/public/gallery`, {
+            const response = await fetch(`${API_BASE_URL}/api/public/gallery`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -202,9 +202,9 @@ const Gallery = () => {
     const fetchGalleryItems = async () => {
         try {
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-            const photoRes = await fetch(`${API_BASE_URL}/public/gallery?mediaType=photo`);
-            const videoRes = await fetch(`${API_BASE_URL}/public/gallery?mediaType=video`);
-            const newsRes = await fetch(`${API_BASE_URL}/public/gallery?mediaType=news`);
+            const photoRes = await fetch(`${API_BASE_URL}/api/public/gallery?mediaType=photo`);
+            const videoRes = await fetch(`${API_BASE_URL}/api/public/gallery?mediaType=video`);
+            const newsRes = await fetch(`${API_BASE_URL}/api/public/gallery?mediaType=news`);
 
             if (photoRes.ok) setPhotos(await photoRes.json());
             if (videoRes.ok) setVideos(await videoRes.json());
@@ -221,7 +221,7 @@ const Gallery = () => {
         try {
             const token = localStorage.getItem('token');
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-            const res = await fetch(`${API_BASE_URL}/public/gallery/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/public/gallery/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

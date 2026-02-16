@@ -21,7 +21,7 @@ const MonitorLeave = () => {
     const fetchLeaves = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/leaves/all-leaves`, {
+            const response = await fetch(`${API_BASE_URL}/api/leaves/all-leaves`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -41,7 +41,7 @@ const MonitorLeave = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/leaves/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/leaves/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -63,7 +63,7 @@ const MonitorLeave = () => {
     const handleStatusUpdate = async (id, newStatus) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/leaves/${id}/status`, {
+            const response = await fetch(`${API_BASE_URL}/api/leaves/${id}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

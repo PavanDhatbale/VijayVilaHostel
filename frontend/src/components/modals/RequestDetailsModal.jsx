@@ -11,7 +11,7 @@ const RequestDetailsModal = ({ isOpen, onClose, request }) => {
     const fetchPayments = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/contributions/${request._id}/payments`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contributions/${request._id}/payments`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -37,7 +37,7 @@ const RequestDetailsModal = ({ isOpen, onClose, request }) => {
     const handleUpdateStatus = async (paymentId, status) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/contributions/payments/${paymentId}/status`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contributions/payments/${paymentId}/status`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

@@ -18,7 +18,7 @@ const Sidebar = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) return;
-            const response = await fetch(`${API_BASE_URL}/notices/unread-count`, {
+            const response = await fetch(`${API_BASE_URL}/api/notices/unread-count`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();

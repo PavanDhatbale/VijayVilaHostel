@@ -26,7 +26,7 @@ const StudentStatusDashboard = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/admission/accept`, {
+            const response = await fetch(`${API_BASE_URL}/api/admission/accept`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`

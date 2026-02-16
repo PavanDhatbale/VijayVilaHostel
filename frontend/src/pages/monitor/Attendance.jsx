@@ -22,7 +22,7 @@ const MonitorAttendance = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/monitor/students?date=${date}`, {
+            const response = await fetch(`${API_BASE_URL}/api/monitor/students?date=${date}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -45,7 +45,7 @@ const MonitorAttendance = () => {
     const handleMarkAttendance = async (studentId, status) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/attendance/mark`, {
+            const response = await fetch(`${API_BASE_URL}/api/attendance/mark`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -34,7 +34,7 @@ const Home = () => {
 
     const fetchHostelConfig = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/public/config`);
+            const response = await fetch(`${API_BASE_URL}/api/public/config`);
             if (response.ok) {
                 const data = await response.json();
                 setHostelConfig(data);
@@ -46,7 +46,7 @@ const Home = () => {
 
     const fetchLocation = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/hostel-location`);
+            const response = await fetch(`${API_BASE_URL}/api/hostel-location`);
             if (response.ok) {
                 const data = await response.json();
                 setLocationData(data);

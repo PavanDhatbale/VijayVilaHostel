@@ -59,7 +59,7 @@ const ManagerProfile = () => {
             const token = localStorage.getItem('token');
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-            const response = await fetch(`${API_BASE_URL}/media/profile-image`, {
+            const response = await fetch(`${API_BASE_URL}/api/media/profile-image`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -88,7 +88,7 @@ const ManagerProfile = () => {
             const token = localStorage.getItem('token');
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-            const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+            const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ const ManagerProfile = () => {
                 if (!token) return;
 
                 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-                const response = await fetch(`${API_BASE_URL}/manager/profile-stats`, {
+                const response = await fetch(`${API_BASE_URL}/api/manager/profile-stats`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }

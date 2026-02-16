@@ -18,8 +18,8 @@ const StudentContributions = () => {
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
             const [requestsRes, statusRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/contributions/active`, { headers }),
-                fetch(`${API_BASE_URL}/contributions/payments/my-status`, { headers })
+                fetch(`${API_BASE_URL}/api/contributions/active`, { headers }),
+                fetch(`${API_BASE_URL}/api/contributions/payments/my-status`, { headers })
             ]);
 
             const requestsData = await requestsRes.json();

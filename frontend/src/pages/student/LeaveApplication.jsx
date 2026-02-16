@@ -27,7 +27,7 @@ const StudentLeave = () => {
     const fetchLeaves = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/leaves/my-leaves`, {
+            const response = await fetch(`${API_BASE_URL}/api/leaves/my-leaves`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.ok) {
@@ -50,7 +50,7 @@ const StudentLeave = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/leaves/apply`, {
+            const response = await fetch(`${API_BASE_URL}/api/leaves/apply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const StudentLeave = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/leaves/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/leaves/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

@@ -29,7 +29,7 @@ const UpdateLocationModal = ({ isOpen, onClose, onUpdate }) => {
         setFetching(true);
         try {
             // Public endpoint now
-            const response = await fetch(`${API_BASE_URL}/hostel-location`);
+            const response = await fetch(`${API_BASE_URL}/api/hostel-location`);
             if (response.ok) {
                 const data = await response.json();
                 if (data && data.hostelName) {
@@ -72,7 +72,7 @@ const UpdateLocationModal = ({ isOpen, onClose, onUpdate }) => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/hostel-location`, {
+            const response = await fetch(`${API_BASE_URL}/api/hostel-location`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

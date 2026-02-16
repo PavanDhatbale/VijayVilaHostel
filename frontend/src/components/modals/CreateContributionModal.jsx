@@ -47,7 +47,7 @@ const CreateContributionModal = ({ isOpen, onClose, onCreated }) => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/contributions`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contributions`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

@@ -134,7 +134,7 @@ const AddStudentModal = ({ isOpen, onClose, onStudentAdded, studentToEdit }) => 
 
             let response;
             if (studentToEdit) {
-                response = await fetch(`${API_BASE_URL}/public/students/${studentToEdit._id}`, {
+                response = await fetch(`${API_BASE_URL}/api/public/students/${studentToEdit._id}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -142,7 +142,7 @@ const AddStudentModal = ({ isOpen, onClose, onStudentAdded, studentToEdit }) => 
                     body: formData
                 });
             } else {
-                response = await fetch(`${API_BASE_URL}/public/students`, {
+                response = await fetch(`${API_BASE_URL}/api/public/students`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -589,7 +589,7 @@ const Students = () => {
     const fetchStudents = async () => {
         try {
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-            const response = await fetch(`${API_BASE_URL}/public/students`);
+            const response = await fetch(`${API_BASE_URL}/api/public/students`);
             const data = await response.json();
             if (response.ok) {
                 setStudents(data);
@@ -798,7 +798,7 @@ const Students = () => {
                                                         try {
                                                             const token = localStorage.getItem('token');
                                                             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-                                                            const res = await fetch(`${API_BASE_URL}/public/students/${student._id}`, {
+                                                            const res = await fetch(`${API_BASE_URL}/api/public/students/${student._id}`, {
                                                                 method: 'DELETE',
                                                                 headers: { 'Authorization': `Bearer ${token}` }
                                                             });

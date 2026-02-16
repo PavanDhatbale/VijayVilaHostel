@@ -29,7 +29,7 @@ const StudentDetails = () => {
         const fetchStudentDetails = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${API_BASE_URL}/public/students/${id}`);
+                const response = await fetch(`${API_BASE_URL}/api/public/students/${id}`);
                 const data = await response.json();
                 if (response.ok) {
                     setStudent(data);

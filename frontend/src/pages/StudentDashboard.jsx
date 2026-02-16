@@ -22,7 +22,7 @@ const StudentDashboard = () => {
     const fetchAttendance = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/student-dashboard/attendance`, {
+            const response = await fetch(`${API_BASE_URL}/api/student-dashboard/attendance`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -41,7 +41,7 @@ const StudentDashboard = () => {
     const fetchNotices = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/notices`, {
+            const response = await fetch(`${API_BASE_URL}/api/notices`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();

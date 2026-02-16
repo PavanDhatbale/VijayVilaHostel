@@ -26,7 +26,7 @@ const HostelLocationForm = () => {
     const fetchLocation = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/hostel-location`, {
+            const response = await fetch(`${API_BASE_URL}/api/hostel-location`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -73,7 +73,7 @@ const HostelLocationForm = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/hostel-location`, {
+            const response = await fetch(`${API_BASE_URL}/api/hostel-location`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

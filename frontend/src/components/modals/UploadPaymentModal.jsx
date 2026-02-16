@@ -34,7 +34,7 @@ const UploadPaymentModal = ({ isOpen, onClose, request, onUploaded }) => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/contributions/payments/upload`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contributions/payments/upload`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

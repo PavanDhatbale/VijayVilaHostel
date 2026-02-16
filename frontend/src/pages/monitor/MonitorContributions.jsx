@@ -16,7 +16,7 @@ const MonitorContributions = () => {
     const fetchRequests = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/contributions/monitor`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/contributions/monitor`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

@@ -68,7 +68,7 @@ const ManagerStudents = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/manager/students`, {
+            const response = await fetch(`${API_BASE_URL}/api/manager/students`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -132,7 +132,7 @@ const ManagerStudents = () => {
                 }
             });
 
-            const response = await fetch(`${API_BASE_URL}/manager/students/${selectedStudent._id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/manager/students/${selectedStudent._id}`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -168,7 +168,7 @@ const ManagerStudents = () => {
                 }
             });
 
-            const response = await fetch(`${API_BASE_URL}/manager/students`, {
+            const response = await fetch(`${API_BASE_URL}/api/manager/students`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -195,7 +195,7 @@ const ManagerStudents = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/manager/students/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/manager/students/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`

@@ -37,7 +37,7 @@ const MonitorProfile = () => {
             try {
                 const token = localStorage.getItem('token');
                 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-                const response = await fetch(`${API_BASE_URL}/monitor/profile-stats`, {
+                const response = await fetch(`${API_BASE_URL}/api/monitor/profile-stats`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await response.json();
@@ -66,7 +66,7 @@ const MonitorProfile = () => {
             const token = localStorage.getItem('token');
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-            const response = await fetch(`${API_BASE_URL}/media/profile-image`, {
+            const response = await fetch(`${API_BASE_URL}/api/media/profile-image`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -95,7 +95,7 @@ const MonitorProfile = () => {
             const token = localStorage.getItem('token');
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-            const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+            const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -64,7 +64,7 @@ const PersonalGallery = ({ studentId, isOwner }) => {
     const fetchMedia = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/media/student/${studentId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/media/student/${studentId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -93,7 +93,7 @@ const PersonalGallery = ({ studentId, isOwner }) => {
             formData.append('media', uploadData.file);
             formData.append('caption', uploadData.caption);
 
-            const response = await fetch(`${API_BASE_URL}/media/upload`, {
+            const response = await fetch(`${API_BASE_URL}/api/media/upload`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formData
@@ -119,7 +119,7 @@ const PersonalGallery = ({ studentId, isOwner }) => {
         if (!window.confirm('Are you sure you want to delete this media?')) return;
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_BASE_URL}/media/${mediaId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/media/${mediaId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

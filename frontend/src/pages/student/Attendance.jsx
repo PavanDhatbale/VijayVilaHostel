@@ -19,7 +19,7 @@ const Attendance = () => {
             const from = new Date(year, month, 1).toISOString();
             const to = new Date(year, month + 1, 0).toISOString();
 
-            const response = await fetch(`${API_BASE_URL}/attendance/history?from=${from}&to=${to}`, {
+            const response = await fetch(`${API_BASE_URL}/api/attendance/history?from=${from}&to=${to}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
