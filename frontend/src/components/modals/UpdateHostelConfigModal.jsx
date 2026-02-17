@@ -65,7 +65,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
         }
     };
 
-    const [uploadProgress, setUploadProgress] = useState(0);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -169,9 +169,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                 onConfigUpdated(updatedConfig);
                 setFile(null);
                 setHeroFile(null);
-                setVideoFile(null);
                 setGalleryFiles([]);
-                setUploadProgress(0);
                 onClose();
             } else {
                 const errorData = await response.json();
@@ -182,7 +180,6 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
             toast.error('Something went wrong');
         } finally {
             setLoading(false);
-            setUploadProgress(0);
         }
     };
 
@@ -218,6 +215,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                     >
                         Hostel Video
                     </button>
+
                     <button
                         onClick={() => setActiveTab('gallery')}
                         className={`flex-1 py-4 text-sm font-bold text-center transition-colors ${activeTab === 'gallery' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50/50' : 'text-gray-500 hover:bg-gray-50'}`}
@@ -340,6 +338,8 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                             </div>
                         )}
 
+
+
                         {/* Video Tab */}
                         {activeTab === 'video' && (
                             <div className="space-y-6 animate-fade-in">
@@ -348,8 +348,8 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                                     <div className="rounded-2xl overflow-hidden bg-gray-100 border-2 border-dashed border-gray-300 relative aspect-video group">
                                         {videoFile ? (
                                             <video src={URL.createObjectURL(videoFile)} className="w-full h-full object-cover" controls />
-                                        ) : initialConfig?.hostelVideo?.url ? (
-                                            <video src={initialConfig.hostelVideo.url} className="w-full h-full object-cover" controls />
+                                        ) : initialConfig?.hostelVideo ? (
+                                            <video src={initialConfig.hostelVideo} className="w-full h-full object-cover" controls />
                                         ) : (
                                             <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
                                                 <Upload size={48} className="mb-2" />
@@ -374,7 +374,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                                             onChange={(e) => setVideoFile(e.target.files[0])}
                                         />
                                     </div>
-                                    <p className="text-xs text-gray-500 mt-2">Upload a comprehensive video tour of the hostel. Max size: 100MB.</p>
+                                    <p className="text-xs text-gray-500 mt-2">Upload a comprehensive video tour. Supports standard video formats. Max size 100MB.</p>
                                 </div>
                             </div>
                         )}
@@ -452,15 +452,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
 
                 </div>
 
-                {uploadProgress > 0 && uploadProgress < 100 && (
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-                        <div
-                            className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-                            style={{ width: `${uploadProgress}%` }}
-                        ></div>
-                        <p className="text-xs text-center mt-1 text-gray-500">Uploading Video: {uploadProgress}%</p>
-                    </div>
-                )}
+
 
                 <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-6">
                     <Button type="button" variant="secondary" onClick={onClose} className="px-6 py-3 rounded-xl font-bold">

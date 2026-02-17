@@ -10,11 +10,13 @@ const {
     addGalleryItem,
     deleteGalleryItem,
     getHostelConfig,
-    updateHostelConfig
+    updateHostelConfig,
+    updateHostelVideo
 } = require('../controllers/contentController');
 const { protect } = require('../middleware/authMiddleware');
 const roleMiddleware = require('../middleware/roleMiddleware');
 const upload = require('../middleware/uploadMiddleware');
+const videoUpload = require('../middleware/videoUploadMiddleware');
 
 // Public routes
 router.get('/students', getFeaturedStudents);
@@ -42,10 +44,13 @@ router.delete('/gallery/:id', protect, roleMiddleware.authorize('hostelManager')
 router.put('/config', protect, roleMiddleware.authorize('hostelManager'), upload.fields([
     { name: 'ownerImage', maxCount: 1 },
     { name: 'heroImage', maxCount: 1 },
-    { name: 'hostelVideo', maxCount: 1 },
+
     { name: 'landingGallery', maxCount: 10 }
 ]), updateHostelConfig);
 
 router.delete('/config/gallery/:id', protect, roleMiddleware.authorize('hostelManager'), require('../controllers/contentController').deleteLandingGalleryImage);
+
+// Update hostel video (Manager only) - Stream Upload
+router.put('/video', protect, roleMiddleware.authorize('hostelManager'), videoUpload.single('video'), updateHostelVideo);
 
 module.exports = router;

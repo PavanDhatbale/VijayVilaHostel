@@ -2,6 +2,7 @@ const FeaturedStudent = require('../models/FeaturedStudent');
 const GalleryItem = require('../models/GalleryItem');
 const HostelConfig = require('../models/HostelConfig');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
+const uploadVideoToCloudinary = require('../utils/cloudinaryStream');
 
 // @desc    Get all featured students
 // @route   GET /api/public/students
@@ -530,6 +531,36 @@ const deleteLandingGalleryImage = async (req, res) => {
     }
 };
 
+// @desc    Update Hostel Video
+// @route   PUT /api/public/config/video
+// @access  Private/Manager
+const updateHostelVideo = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: "Video file required" });
+        }
+
+        // Upload to Cloudinary using stream
+        const result = await uploadVideoToCloudinary(req.file.buffer);
+
+        // Update database
+        const updatedConfig = await HostelConfig.findOneAndUpdate(
+            {},
+            { hostelVideo: result.secure_url },
+            { new: true, upsert: true }
+        );
+
+        res.status(200).json({
+            message: "Hostel video uploaded successfully",
+            config: updatedConfig
+        });
+
+    } catch (error) {
+        console.error('Video upload error:', error);
+        res.status(500).json({ message: "Video upload failed" });
+    }
+};
+
 module.exports = {
     getFeaturedStudents,
     getFeaturedStudentById,
@@ -541,5 +572,6 @@ module.exports = {
     deleteGalleryItem,
     getHostelConfig,
     updateHostelConfig,
-    deleteLandingGalleryImage
+    deleteLandingGalleryImage,
+    updateHostelVideo
 };
