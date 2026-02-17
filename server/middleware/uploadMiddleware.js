@@ -4,8 +4,13 @@ const fs = require('fs');
 
 
 
-// Use directory OUTSIDE server folder to guarantee nodemon doesn't watch it
-const uploadDir = path.join(__dirname, '../../temp_uploads');
+const os = require('os');
+
+// Use system temp directory in production (Render), local folder in development to avoid nodemon restarts
+const uploadDir = process.env.NODE_ENV === 'production'
+    ? os.tmpdir()
+    : path.join(__dirname, '../../temp_uploads');
+
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
