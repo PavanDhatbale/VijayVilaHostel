@@ -345,7 +345,7 @@ const Profile = () => {
 };
 
 const StudentDocumentLink = ({ label, path }) => {
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL+"/api";
 
     if (!path) return (
         <div className="p-4 bg-gray-50 border border-gray-100 rounded-2xl opacity-60">

@@ -572,7 +572,7 @@ const DetailItem = ({ label, value }) => (
 );
 
 const DocumentLink = ({ label, path }) => {
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL+"/api";
 
     if (!path) return (
         <div className="p-3 bg-white border border-gray-100 rounded-xl opacity-50">

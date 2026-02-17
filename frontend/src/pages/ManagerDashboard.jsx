@@ -469,7 +469,7 @@ const DetailItem = ({ label, value }) => (
 );
 
 const DocumentLink = ({ label, path }) => {
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL+"/api";
 
     // Debugging: Log the path type and value
     // console.log(`DocumentLink [${label}]:`, typeof path, path);
