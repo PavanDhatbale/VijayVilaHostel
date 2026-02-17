@@ -27,7 +27,7 @@ const cors = require("cors");
 
 const allowedOrigins = [
   "http://localhost:5173", // local dev
-  "https://vijay-vila-hostel.vercel.app", // production frontend
+  "https://vijayvilahostel.onrender.com", // production frontend
 ];
 
 app.use(
