@@ -12,37 +12,37 @@ const app = express();
 connectDB();
 
 // Middleware
-// app.use(cors());
-// app.use(cors({
-//     origin: [
-//         process.env.FRONTEND_URL,
-//         'https://vijay-vila-hostel.vercel.app',
-//         'http://localhost:5173'
-//     ],
-//     credentials: true,
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//     allowedHeaders: ['Content-Type', 'Authorization']
-// }));
+app.use(cors());
+app.use(cors({
+    origin: [
+        process.env.FRONTEND_URL,
+        'https://vijay-vila-hostel.vercel.app',
+        'http://localhost:5173'
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 const cors = require("cors");
 
-const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "https://vijayvilahostel.onrender.com", // production frontend
-];
+// const allowedOrigins = [
+//   "http://localhost:5173", // local dev
+//   "https://vijayvilahostel.onrender.com", // production frontend
+// ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin) return callback(null, true);
+//       if (allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
 
 
 
