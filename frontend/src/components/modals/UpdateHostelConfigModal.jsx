@@ -77,65 +77,34 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
             const token = localStorage.getItem('token');
             const data = new FormData();
 
-            // 1. Handle Video Upload (Direct to Cloudinary)
+            // 1. Handle Video Upload (Backend Stream Upload)
             if (videoFile) {
+                const videoData = new FormData();
+                videoData.append('video', videoFile);
+
+                toast.loading('Uploading video (this may take a while)...', { id: 'videoUpload' });
                 try {
-                    toast.loading('Preparing video upload...', { id: 'videoUpload' });
-
-                    // A. Get Signature
-                    const signRes = await fetch(`${API_BASE_URL}/api/media/sign-upload`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
+                    const videoRes = await fetch(`${API_BASE_URL}/api/public/config/video`, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: videoData
                     });
 
-                    if (!signRes.ok) throw new Error('Failed to get upload signature');
-                    const signData = await signRes.json();
+                    if (!videoRes.ok) {
+                        const errorData = await videoRes.json();
+                        throw new Error(errorData.message || 'Video upload failed');
+                    }
 
-                    // B. Upload to Cloudinary
-                    const cloudFormData = new FormData();
-                    cloudFormData.append('file', videoFile);
-                    cloudFormData.append('api_key', signData.apiKey);
-                    cloudFormData.append('timestamp', signData.timestamp);
-                    cloudFormData.append('signature', signData.signature);
-                    cloudFormData.append('folder', signData.folder);
-
-                    // Use XHR for progress
-                    const videoUploadPromise = new Promise((resolve, reject) => {
-                        const xhr = new XMLHttpRequest();
-                        xhr.open('POST', `https://api.cloudinary.com/v1_1/${signData.cloudName}/video/upload`);
-
-                        xhr.upload.onprogress = (event) => {
-                            if (event.lengthComputable) {
-                                const percent = Math.round((event.loaded / event.total) * 100);
-                                setUploadProgress(percent);
-                                toast.loading(`Uploading Video: ${percent}%`, { id: 'videoUpload' });
-                            }
-                        };
-
-                        xhr.onload = () => {
-                            if (xhr.status === 200) {
-                                const response = JSON.parse(xhr.responseText);
-                                resolve(response);
-                            } else {
-                                reject(new Error('Cloudinary upload failed'));
-                            }
-                        };
-
-                        xhr.onerror = () => reject(new Error('Network error during upload'));
-                        xhr.send(cloudFormData);
-                    });
-
-                    const uploadResult = await videoUploadPromise;
-                    toast.success('Video uploaded successfully!', { id: 'videoUpload' });
-
-                    // Add result to backend payload
-                    data.append('videoUrl', uploadResult.secure_url);
-                    data.append('videoPublicId', uploadResult.public_id);
-
+                    toast.success('Video uploaded successfully', { id: 'videoUpload' });
+                    // We don't need to do anything else here, the next step updates the rest of the config
+                    // and then onConfigUpdated is called with the final result.
                 } catch (error) {
                     console.error('Video upload error:', error);
-                    toast.error('Video upload failed: ' + error.message, { id: 'videoUpload' });
+                    toast.error(`Video upload failed: ${error.message}`, { id: 'videoUpload' });
                     setLoading(false);
-                    return; // Stop submission
+                    return;
                 }
             }
 
