@@ -437,8 +437,17 @@ const updateHostelConfig = async (req, res) => {
             };
         }
 
-        // Handle hostel video update
-        if (req.files && req.files['hostelVideo']) {
+        // Handle hostel video update (Direct Upload or File Upload)
+        if (req.body.videoUrl && req.body.videoPublicId) {
+            // Direct upload from frontend
+            if (config.hostelVideo && config.hostelVideo.publicId) {
+                await deleteFromCloudinary(config.hostelVideo.publicId, 'video');
+            }
+            config.hostelVideo = {
+                url: req.body.videoUrl,
+                publicId: req.body.videoPublicId
+            };
+        } else if (req.files && req.files['hostelVideo']) {
             if (config.hostelVideo && config.hostelVideo.publicId) {
                 await deleteFromCloudinary(config.hostelVideo.publicId, 'video');
             }

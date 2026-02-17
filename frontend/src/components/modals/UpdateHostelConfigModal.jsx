@@ -65,40 +65,96 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
         }
     };
 
+    const [uploadProgress, setUploadProgress] = useState(0);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setUploadProgress(0);
 
         try {
             const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+            const token = localStorage.getItem('token');
             const data = new FormData();
 
-            // Owner Data
+            // 1. Handle Video Upload (Direct to Cloudinary)
+            if (videoFile) {
+                try {
+                    toast.loading('Preparing video upload...', { id: 'videoUpload' });
+
+                    // A. Get Signature
+                    const signRes = await fetch(`${API_BASE_URL}/api/media/sign-upload`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (!signRes.ok) throw new Error('Failed to get upload signature');
+                    const signData = await signRes.json();
+
+                    // B. Upload to Cloudinary
+                    const cloudFormData = new FormData();
+                    cloudFormData.append('file', videoFile);
+                    cloudFormData.append('api_key', signData.apiKey);
+                    cloudFormData.append('timestamp', signData.timestamp);
+                    cloudFormData.append('signature', signData.signature);
+                    cloudFormData.append('folder', signData.folder);
+
+                    // Use XHR for progress
+                    const videoUploadPromise = new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('POST', `https://api.cloudinary.com/v1_1/${signData.cloudName}/video/upload`);
+
+                        xhr.upload.onprogress = (event) => {
+                            if (event.lengthComputable) {
+                                const percent = Math.round((event.loaded / event.total) * 100);
+                                setUploadProgress(percent);
+                                toast.loading(`Uploading Video: ${percent}%`, { id: 'videoUpload' });
+                            }
+                        };
+
+                        xhr.onload = () => {
+                            if (xhr.status === 200) {
+                                const response = JSON.parse(xhr.responseText);
+                                resolve(response);
+                            } else {
+                                reject(new Error('Cloudinary upload failed'));
+                            }
+                        };
+
+                        xhr.onerror = () => reject(new Error('Network error during upload'));
+                        xhr.send(cloudFormData);
+                    });
+
+                    const uploadResult = await videoUploadPromise;
+                    toast.success('Video uploaded successfully!', { id: 'videoUpload' });
+
+                    // Add result to backend payload
+                    data.append('videoUrl', uploadResult.secure_url);
+                    data.append('videoPublicId', uploadResult.public_id);
+
+                } catch (error) {
+                    console.error('Video upload error:', error);
+                    toast.error('Video upload failed: ' + error.message, { id: 'videoUpload' });
+                    setLoading(false);
+                    return; // Stop submission
+                }
+            }
+
+            // 2. Append other fields
             data.append('ownerName', formData.ownerName);
             data.append('ownerRole', formData.ownerRole);
             data.append('ownerBio', formData.ownerBio);
-            if (file) {
-                data.append('ownerImage', file);
-            }
+            if (file) data.append('ownerImage', file);
+            if (heroFile) data.append('heroImage', heroFile);
 
-            // Hero Image
-            if (heroFile) {
-                data.append('heroImage', heroFile);
-            }
+            // Note: 'hostelVideo' is NOT appended here as we sent URL directly
 
-            // Hostel Video
-            if (videoFile) {
-                data.append('hostelVideo', videoFile);
-            }
-
-            // Gallery Images
             if (galleryFiles.length > 0) {
                 Array.from(galleryFiles).forEach(file => {
                     data.append('landingGallery', file);
                 });
             }
 
-            const token = localStorage.getItem('token');
+            // 3. Update Backend Config
             const response = await fetch(`${API_BASE_URL}/api/public/config`, {
                 method: 'PUT',
                 headers: {
@@ -111,11 +167,11 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                 toast.success('Configuration updated successfully!');
                 const updatedConfig = await response.json();
                 onConfigUpdated(updatedConfig);
-                // Reset files
                 setFile(null);
                 setHeroFile(null);
                 setVideoFile(null);
                 setGalleryFiles([]);
+                setUploadProgress(0);
                 onClose();
             } else {
                 const errorData = await response.json();
@@ -126,6 +182,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
             toast.error('Something went wrong');
         } finally {
             setLoading(false);
+            setUploadProgress(0);
         }
     };
 
@@ -393,23 +450,35 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                             </div>
                         )}
 
-                        <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-6">
-                            <Button type="button" variant="secondary" onClick={onClose} className="px-6 py-3 rounded-xl font-bold">
-                                Cancel
-                            </Button>
-                            <Button
-                                type="submit"
-                                variant="primary"
-                                disabled={loading}
-                                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200"
-                            >
-                                {loading ? 'Saving...' : 'Save Changes'}
-                            </Button>
-                        </div>
-                    </form>
                 </div>
-            </div>
+
+                {uploadProgress > 0 && uploadProgress < 100 && (
+                    <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                        <div
+                            className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+                            style={{ width: `${uploadProgress}%` }}
+                        ></div>
+                        <p className="text-xs text-center mt-1 text-gray-500">Uploading Video: {uploadProgress}%</p>
+                    </div>
+                )}
+
+                <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-6">
+                    <Button type="button" variant="secondary" onClick={onClose} className="px-6 py-3 rounded-xl font-bold">
+                        Cancel
+                    </Button>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={loading}
+                        className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200"
+                    >
+                        {loading ? 'Saving...' : 'Save Changes'}
+                    </Button>
+                </div>
+            </form>
         </div>
+            </div >
+        </div >
     );
 };
 

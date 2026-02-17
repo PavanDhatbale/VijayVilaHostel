@@ -1,5 +1,6 @@
 const Media = require('../models/Media');
 const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
+const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 
 // @desc    Upload media for student gallery
@@ -125,9 +126,36 @@ const uploadProfileImage = async (req, res) => {
     }
 };
 
+// @desc    Get Cloudinary upload signature
+// @route   GET /api/media/sign-upload
+// @access  Private/Manager
+const getUploadSignature = async (req, res) => {
+    try {
+        const timestamp = Math.round((new Date()).getTime() / 1000);
+        const folder = 'hostel/config/video';
+
+        const signature = cloudinary.utils.api_sign_request({
+            timestamp: timestamp,
+            folder: folder,
+        }, process.env.CLOUDINARY_API_SECRET);
+
+        res.json({
+            signature,
+            timestamp,
+            cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+            apiKey: process.env.CLOUDINARY_API_KEY,
+            folder
+        });
+    } catch (error) {
+        console.error('Signature Generation Error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
 module.exports = {
     uploadMedia,
     getStudentMedia,
     deleteMedia,
-    uploadProfileImage
+    uploadProfileImage,
+    getUploadSignature
 };

@@ -20,6 +20,9 @@ router.post('/profile-image', upload.single('image'), require('../controllers/me
 // Delete media (Owner only checked in controller)
 router.delete('/:mediaId', deleteMedia);
 
+// Get upload signature (Manager only)
+router.get('/sign-upload', require('../controllers/mediaController').getUploadSignature);
+
 // Get student's media (Student, Manager, Monitor)
 router.get('/student/:studentId', getStudentMedia);
 
