@@ -23,7 +23,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
-const cors = require("cors");
+// const cors = require("cors");
 
 // const allowedOrigins = [
 //   "http://localhost:5173", // local dev
