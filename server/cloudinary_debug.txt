@@ -1,0 +1,6 @@
+Testing Cloudinary Configuration...
+Cloud Name: dfos72c3g
+API Key: Set
+API Secret: Set
+✅ Cloudinary Connection Successful!
+Status: ok
