@@ -451,6 +451,52 @@ const Home = () => {
                 </div>
             </div>
 
+            {/* Hostel Video Section */}
+            <div id="video-tour" className="py-10 bg-gray-50 relative">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-12 relative">
+                        <span className="inline-block px-4 py-1 rounded-full bg-red-100 text-red-700 text-sm font-medium mb-4">Virtual Experience</span>
+                        <h2 className="text-4xl font-bold text-gray-900 mb-4">Hostel Video Tour</h2>
+                        <p className="text-xl text-gray-600">Explore our facilities in motion</p>
+
+                        {/* Manager Edit Video Button */}
+                        {user?.role === 'hostelManager' && (
+                            <button
+                                onClick={() => setIsConfigModalOpen(true)}
+                                className="absolute right-0 top-0 inline-flex items-center gap-2 px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors"
+                            >
+                                <Edit size={16} /> Edit Video
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden shadow-2xl aspect-video bg-black relative group">
+                        {hostelConfig?.hostelVideo?.url ? (
+                            <video
+                                src={hostelConfig.hostelVideo.url}
+                                className="w-full h-full object-cover"
+                                controls
+                                poster={hostelConfig.heroImage?.url} // Use hero image as poster if available
+                            >
+                                Your browser does not support the video tag.
+                            </video>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                                <p>No video tour uploaded yet.</p>
+                                {user?.role === 'hostelManager' && (
+                                    <button
+                                        onClick={() => setIsConfigModalOpen(true)}
+                                        className="mt-4 text-blue-600 underline"
+                                    >
+                                        Upload Video
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
             {/* Promise / CTA Section */}
             <div className="py-10 bg-gradient-to-br from-blue-600 to-indigo-700 text-center text-white relative overflow-hidden">
                 {/* Decorative circles */}

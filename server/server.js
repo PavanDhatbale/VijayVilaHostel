@@ -19,7 +19,8 @@ app.use(cors({
 }));
 
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
@@ -46,6 +47,11 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
 });
+
+// Increase timeout to 30 minutes for large video uploads
+server.timeout = 1800000;
+server.keepAliveTimeout = 1800000;
+server.headersTimeout = 1800000;

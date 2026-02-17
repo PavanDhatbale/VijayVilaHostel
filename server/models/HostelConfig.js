@@ -27,6 +27,10 @@ const hostelConfigSchema = new mongoose.Schema({
         },
         publicId: String
     },
+    hostelVideo: {
+        url: String,
+        publicId: String
+    },
     landingGallery: [{
         url: {
             type: String,

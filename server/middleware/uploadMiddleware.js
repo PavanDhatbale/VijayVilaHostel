@@ -2,8 +2,10 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, '../uploads/temp');
+
+
+// Use directory OUTSIDE server folder to guarantee nodemon doesn't watch it
+const uploadDir = path.join(__dirname, '../../temp_uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -32,7 +34,7 @@ const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
-        fileSize: 50 * 1024 * 1024 // 50MB limit
+        fileSize: 300 * 1024 * 1024 // 300MB limit
     }
 });
 

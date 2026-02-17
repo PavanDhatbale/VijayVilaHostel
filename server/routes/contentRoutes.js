@@ -42,6 +42,7 @@ router.delete('/gallery/:id', protect, roleMiddleware.authorize('hostelManager')
 router.put('/config', protect, roleMiddleware.authorize('hostelManager'), upload.fields([
     { name: 'ownerImage', maxCount: 1 },
     { name: 'heroImage', maxCount: 1 },
+    { name: 'hostelVideo', maxCount: 1 },
     { name: 'landingGallery', maxCount: 10 }
 ]), updateHostelConfig);
 

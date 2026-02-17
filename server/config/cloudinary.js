@@ -17,12 +17,27 @@ cloudinary.config({
  */
 const uploadToCloudinary = async (filePath, folder, resourceType = 'auto') => {
     try {
-        const result = await cloudinary.uploader.upload(filePath, {
-            folder: `hostel/${folder}`,
-            resource_type: resourceType,
-            quality: 'auto',
-            fetch_format: 'auto'
-        });
+        console.log(`Starting upload to Cloudinary: ${filePath} (Exists: ${fs.existsSync(filePath)})`);
+
+        // Wait 2 seconds to ensure file handle is released by filesystem (Windows fix)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        let result;
+        if (resourceType === 'video') {
+            result = await cloudinary.uploader.upload_large(filePath, {
+                folder: `hostel/${folder}`,
+                resource_type: resourceType,
+                chunk_size: 6000000, // 6MB chunks for better stability
+                timeout: 600000 // 10 minutes timeout
+            });
+        } else {
+            result = await cloudinary.uploader.upload(filePath, {
+                folder: `hostel/${folder}`,
+                resource_type: resourceType,
+                quality: 'auto',
+                fetch_format: 'auto'
+            });
+        }
 
         // Remove file from local storage after upload
         if (fs.existsSync(filePath)) {

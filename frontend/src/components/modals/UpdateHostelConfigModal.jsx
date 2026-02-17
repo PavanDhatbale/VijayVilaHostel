@@ -8,6 +8,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
     const { user } = useAuth();
     const [activeTab, setActiveTab] = useState('owner');
     const [heroFile, setHeroFile] = useState(null);
+    const [videoFile, setVideoFile] = useState(null);
     const [galleryFiles, setGalleryFiles] = useState([]);
     const [existingGallery, setExistingGallery] = useState([]);
     const [file, setFile] = useState(null);
@@ -85,6 +86,11 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                 data.append('heroImage', heroFile);
             }
 
+            // Hostel Video
+            if (videoFile) {
+                data.append('hostelVideo', videoFile);
+            }
+
             // Gallery Images
             if (galleryFiles.length > 0) {
                 Array.from(galleryFiles).forEach(file => {
@@ -108,6 +114,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                 // Reset files
                 setFile(null);
                 setHeroFile(null);
+                setVideoFile(null);
                 setGalleryFiles([]);
                 onClose();
             } else {
@@ -127,9 +134,9 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
             <div className="bg-white rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
-                <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+                <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-center relative">
                     <h2 className="text-2xl font-black text-gray-900">Hostel Configuration</h2>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <button onClick={onClose} className="absolute right-8 p-2 hover:bg-gray-100 rounded-full transition-colors">
                         <X className="h-6 w-6 text-gray-500" />
                     </button>
                 </div>
@@ -147,6 +154,12 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                         className={`flex-1 py-4 text-sm font-bold text-center transition-colors ${activeTab === 'hero' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50/50' : 'text-gray-500 hover:bg-gray-50'}`}
                     >
                         Hero Section
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('video')}
+                        className={`flex-1 py-4 text-sm font-bold text-center transition-colors ${activeTab === 'video' ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50/50' : 'text-gray-500 hover:bg-gray-50'}`}
+                    >
+                        Hostel Video
                     </button>
                     <button
                         onClick={() => setActiveTab('gallery')}
@@ -266,6 +279,45 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                                         />
                                     </div>
                                     <p className="text-xs text-gray-500 mt-2">Recommended: Landscape orientation, 1920x1080px or higher.</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Video Tab */}
+                        {activeTab === 'video' && (
+                            <div className="space-y-6 animate-fade-in">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Hostel Tour Video</label>
+                                    <div className="rounded-2xl overflow-hidden bg-gray-100 border-2 border-dashed border-gray-300 relative aspect-video group">
+                                        {videoFile ? (
+                                            <video src={URL.createObjectURL(videoFile)} className="w-full h-full object-cover" controls />
+                                        ) : initialConfig?.hostelVideo?.url ? (
+                                            <video src={initialConfig.hostelVideo.url} className="w-full h-full object-cover" controls />
+                                        ) : (
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400">
+                                                <Upload size={48} className="mb-2" />
+                                                <span className="text-sm font-medium">No Video Uploaded</span>
+                                            </div>
+                                        )}
+
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10 pointer-events-none">
+                                            <label
+                                                htmlFor="hostelVideo"
+                                                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-full hover:bg-gray-100 cursor-pointer font-bold transition-transform transform hover:scale-105 shadow-lg pointer-events-auto"
+                                            >
+                                                <Upload size={20} />
+                                                {videoFile ? 'Change Video' : 'Upload Video'}
+                                            </label>
+                                        </div>
+                                        <input
+                                            type="file"
+                                            id="hostelVideo"
+                                            className="hidden"
+                                            accept="video/*"
+                                            onChange={(e) => setVideoFile(e.target.files[0])}
+                                        />
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-2">Upload a comprehensive video tour of the hostel. Max size: 100MB.</p>
                                 </div>
                             </div>
                         )}

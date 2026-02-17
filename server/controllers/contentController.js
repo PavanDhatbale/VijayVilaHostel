@@ -437,6 +437,23 @@ const updateHostelConfig = async (req, res) => {
             };
         }
 
+        // Handle hostel video update
+        if (req.files && req.files['hostelVideo']) {
+            if (config.hostelVideo && config.hostelVideo.publicId) {
+                await deleteFromCloudinary(config.hostelVideo.publicId, 'video');
+            }
+            try {
+                const uploadedVideo = await uploadToCloudinary(req.files['hostelVideo'][0].path, 'hostel/config/video', 'video');
+                config.hostelVideo = {
+                    url: uploadedVideo.url,
+                    publicId: uploadedVideo.publicId
+                };
+            } catch (err) {
+                console.error('Hostel Video upload failed:', err);
+                throw new Error('Hostel video upload failed');
+            }
+        }
+
         // Handle landing gallery update (append or replace? typically replace for configuration or specific add/remove endpoints are better, but let's stick to append for now or just replace all if provided? User said "manager can able to change all images", implies replacing or managing. Let's assume replacing specific indexes or just adding. For simplicity in this single endpoint, if gallery is provided, we might be adding. But `landingGallery` is an array.
         // Better approach: config.landingGallery is an array.
         // If we want to replace a specific image, we need an index.
