@@ -74,5 +74,6 @@ const deleteFromCloudinary = async (publicId, resourceType = 'image') => {
 
 module.exports = {
     uploadToCloudinary,
-    deleteFromCloudinary
+    deleteFromCloudinary,
+    cloudinary
 };
