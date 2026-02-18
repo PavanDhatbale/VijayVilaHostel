@@ -135,7 +135,7 @@ const Home = () => {
                     {/* Stats Strip */}
                     <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl border-t border-white/10 pt-8">
                         <div>
-                            <p className="text-4xl font-bold text-white">14</p>
+                            <p className="text-4xl font-bold text-white">{hostelConfig?.vacantBeds !== undefined ? hostelConfig.vacantBeds : 14}</p>
                             <p className="text-gray-400">Beds Available</p>
                         </div>
                         <div>

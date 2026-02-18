@@ -1,6 +1,7 @@
 const FeaturedStudent = require('../models/FeaturedStudent');
 const GalleryItem = require('../models/GalleryItem');
 const HostelConfig = require('../models/HostelConfig');
+const User = require('../models/User');
 const { deleteFromCloudinary } = require('../config/cloudinary');
 const uploadToCloudinaryStream = require('../utils/cloudinaryStream');
 
@@ -391,13 +392,25 @@ const deleteGalleryItem = async (req, res) => {
 const getHostelConfig = async (req, res) => {
     try {
         const config = await HostelConfig.findOne();
+
+        // Calculate vacant beds
+        const totalBeds = 14;
+        const occupiedBeds = await User.countDocuments({
+            role: { $in: ['student', 'monitor'] },
+            admissionStatus: 'approved',
+            studentStatus: 'active',
+            roomNumber: { $ne: null },
+            bedNumber: { $ne: null }
+        });
+        const vacantBeds = Math.max(0, totalBeds - occupiedBeds);
+
         if (!config) {
             // Should be seeded or created on first access if using getSingleton approach, 
             // but finding one is safer. If not found, return defaults.
             const defaultConfig = new HostelConfig(); // Returns defaults from schema
-            return res.status(200).json(defaultConfig);
+            return res.status(200).json({ ...defaultConfig.toObject(), vacantBeds });
         }
-        res.status(200).json(config);
+        res.status(200).json({ ...config.toObject(), vacantBeds });
     } catch (error) {
         console.error('Get Config Error:', error);
         res.status(500).json({ message: 'Server error' });
