@@ -112,6 +112,8 @@ const Navbar = () => {
                         <button onClick={() => handleNavigation('home')} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Home</button>
                         <button onClick={() => handleNavigation('about')} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">About</button>
                         <button onClick={() => handleNavigation('facilities')} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Facilities</button>
+                        <Link to="/students" onClick={() => setIsOpen(false)} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Students</Link>
+                        <Link to="/gallery" onClick={() => setIsOpen(false)} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Gallery</Link>
                         <button onClick={() => handleNavigation('contact')} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Contact</button>
                         {user ? (
                             <div className="space-y-3 px-2 py-3">
