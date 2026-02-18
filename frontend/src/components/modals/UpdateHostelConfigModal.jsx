@@ -13,6 +13,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
     const [existingGallery, setExistingGallery] = useState([]);
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
     const [formData, setFormData] = useState({
         ownerName: '',
         ownerRole: '',
