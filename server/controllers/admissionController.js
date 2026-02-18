@@ -1,7 +1,6 @@
 const Admission = require('../models/Admission');
 const User = require('../models/User');
-const path = require('path');
-const fs = require('fs');
+const uploadToCloudinaryStream = require('../utils/cloudinaryStream');
 
 // @desc    Apply for admission
 // @route   POST /api/admission/apply
@@ -33,14 +32,14 @@ const applyForAdmission = async (req, res) => {
         }
 
         // Import Cloudinary utility
-        const { uploadToCloudinary } = require('../config/cloudinary');
+        // const { uploadToCloudinary } = require('../config/cloudinary');
 
         // Helper to upload file and return object
         const uploadDoc = async (file) => {
-            const result = await uploadToCloudinary(file.path, 'admissions', 'auto');
+            const result = await uploadToCloudinaryStream(file.buffer, 'admissions', 'auto');
             return {
                 url: result.url,
-                publicId: result.publicId
+                publicId: result.public_id
             };
         };
 

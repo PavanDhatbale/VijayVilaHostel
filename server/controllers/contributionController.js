@@ -1,6 +1,6 @@
 const ContributionRequest = require('../models/ContributionRequest');
 const ContributionPayment = require('../models/ContributionPayment');
-const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
+const uploadToCloudinaryStream = require('../utils/cloudinaryStream');
 
 // @desc    Create a new contribution request
 // @route   POST /api/contributions
@@ -15,7 +15,7 @@ exports.createRequest = async (req, res) => {
         }
 
         // Upload QR code to Cloudinary
-        const result = await uploadToCloudinary(file.path, 'qr-codes');
+        const result = await uploadToCloudinaryStream(file.buffer, 'qr-codes');
 
         const request = await ContributionRequest.create({
             title,
@@ -24,7 +24,7 @@ exports.createRequest = async (req, res) => {
             dueDate,
             qrCodeImage: {
                 url: result.url,
-                publicId: result.publicId
+                publicId: result.public_id
             },
             createdBy: req.user.id
         });
@@ -127,12 +127,12 @@ exports.uploadPayment = async (req, res) => {
         }
 
         // Upload screenshot
-        const result = await uploadToCloudinary(file.path, 'payment-screenshots');
+        const result = await uploadToCloudinaryStream(file.buffer, 'payment-screenshots');
 
         let payment;
         if (existingPayment && existingPayment.status === 'rejected') {
             // Update existing rejected payment
-            existingPayment.screenshot = { url: result.url, publicId: result.publicId };
+            existingPayment.screenshot = { url: result.url, publicId: result.public_id };
             existingPayment.status = 'pending';
             existingPayment.submittedAt = Date.now();
             existingPayment.remarks = undefined; // Clear previous rejection remarks
@@ -144,7 +144,7 @@ exports.uploadPayment = async (req, res) => {
                 contributionRequest: requestId,
                 screenshot: {
                     url: result.url,
-                    publicId: result.publicId
+                    publicId: result.public_id
                 }
             });
         }

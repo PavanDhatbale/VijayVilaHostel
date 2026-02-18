@@ -3,7 +3,7 @@ const Attendance = require('../models/Attendance');
 const Admission = require('../models/Admission');
 const Notice = require('../models/Notice');
 const MonitorHistory = require('../models/MonitorHistory');
-const { uploadToCloudinary } = require('../config/cloudinary');
+const uploadToCloudinaryStream = require('../utils/cloudinaryStream');
 
 // @desc    Get all approved students
 // @route   GET /api/manager/students
@@ -93,19 +93,19 @@ const updateStudent = async (req, res) => {
 
         // Handle profile image upload
         if (req.files && req.files['profileImage']) {
-            const uploadResult = await uploadToCloudinary(req.files['profileImage'][0].path, 'students/profile', 'image');
+            const uploadResult = await uploadToCloudinaryStream(req.files['profileImage'][0].buffer, 'students/profile', 'image');
             student.profileImage = {
                 url: uploadResult.url,
-                publicId: uploadResult.publicId
+                publicId: uploadResult.public_id
             };
         }
 
         // Handle experience video upload
         if (req.files && req.files['experienceVideo']) {
-            const uploadResult = await uploadToCloudinary(req.files['experienceVideo'][0].path, 'students/videos', 'video');
+            const uploadResult = await uploadToCloudinaryStream(req.files['experienceVideo'][0].buffer, 'students/videos', 'video');
             student.experienceVideo = {
                 url: uploadResult.url,
-                publicId: uploadResult.publicId
+                publicId: uploadResult.public_id
             };
         }
 
@@ -343,19 +343,19 @@ const addStudent = async (req, res) => {
 
         // Handle profile image upload if present
         if (req.files && req.files['profileImage']) {
-            const uploadResult = await uploadToCloudinary(req.files['profileImage'][0].path, 'students/profile', 'image');
+            const uploadResult = await uploadToCloudinaryStream(req.files['profileImage'][0].buffer, 'students/profile', 'image');
             profileImageData = {
                 url: uploadResult.url,
-                publicId: uploadResult.publicId
+                publicId: uploadResult.public_id
             };
         }
 
         // Handle experience video upload if present
         if (req.files && req.files['experienceVideo']) {
-            const uploadResult = await uploadToCloudinary(req.files['experienceVideo'][0].path, 'students/videos', 'video');
+            const uploadResult = await uploadToCloudinaryStream(req.files['experienceVideo'][0].buffer, 'students/videos', 'video');
             experienceVideoData = {
                 url: uploadResult.url,
-                publicId: uploadResult.publicId
+                publicId: uploadResult.public_id
             };
         }
 

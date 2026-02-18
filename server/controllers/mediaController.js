@@ -1,7 +1,7 @@
 const Media = require('../models/Media');
-const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
+const { deleteFromCloudinary } = require('../config/cloudinary');
+const uploadToCloudinaryStream = require('../utils/cloudinaryStream');
 const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
 
 // @desc    Upload media for student gallery
 // @route   POST /api/media/upload
@@ -20,14 +20,14 @@ const uploadMedia = async (req, res) => {
         // Upload to Cloudinary
         // Folder: hostel/students/media/{studentId}
         const folder = `students/media/${req.user._id}`;
-        const uploadResult = await uploadToCloudinary(req.file.path, folder, isVideo ? 'video' : 'image');
+        const uploadResult = await uploadToCloudinaryStream(req.file.buffer, folder, isVideo ? 'video' : 'image');
 
         // Save to DB
         const media = await Media.create({
             student: req.user._id,
             mediaType,
             mediaUrl: uploadResult.url,
-            publicId: uploadResult.publicId,
+            publicId: uploadResult.public_id,
             caption: caption || ''
         });
 
@@ -111,14 +111,14 @@ const uploadProfileImage = async (req, res) => {
         // Upload to Cloudinary
         // Folder: hostel/profiles/{userId}
         const folder = `profiles/${req.user._id}`;
-        const uploadResult = await uploadToCloudinary(req.file.path, folder, 'image');
+        const uploadResult = await uploadToCloudinaryStream(req.file.buffer, folder, 'image');
 
         // Return the URL directly - we don't create a Media document for profile pics
         // The frontend will save this URL to the User profile
         res.status(200).json({
             message: 'Image uploaded successfully',
             url: uploadResult.url,
-            publicId: uploadResult.publicId
+            publicId: uploadResult.public_id
         });
     } catch (error) {
         console.error('Profile Image Upload Error:', error);

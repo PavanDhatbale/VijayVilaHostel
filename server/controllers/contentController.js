@@ -1,8 +1,8 @@
 const FeaturedStudent = require('../models/FeaturedStudent');
 const GalleryItem = require('../models/GalleryItem');
 const HostelConfig = require('../models/HostelConfig');
-const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
-const uploadVideoToCloudinary = require('../utils/cloudinaryStream');
+const { deleteFromCloudinary } = require('../config/cloudinary');
+const uploadToCloudinaryStream = require('../utils/cloudinaryStream');
 
 // @desc    Get all featured students
 // @route   GET /api/public/students
@@ -46,12 +46,12 @@ const addFeaturedStudent = async (req, res) => {
         }
 
         // Upload profile image to Cloudinary
-        uploadedMedia = await uploadToCloudinary(req.files['image'][0].path, 'students/profile', 'image');
+        uploadedMedia = await uploadToCloudinaryStream(req.files['image'][0].buffer, 'students/profile', 'image');
 
         // Handle optional experience video
         if (req.files['experienceVideo']) {
             try {
-                uploadedVideo = await uploadToCloudinary(req.files['experienceVideo'][0].path, 'students/videos', 'video');
+                uploadedVideo = await uploadToCloudinaryStream(req.files['experienceVideo'][0].buffer, 'students/videos', 'video');
             } catch (err) {
                 console.error('Video upload failed:', err);
                 throw new Error('Experience video upload failed (possibly too large)');
@@ -62,10 +62,10 @@ const addFeaturedStudent = async (req, res) => {
         if (req.files['hostelGallery']) {
             for (const file of req.files['hostelGallery']) {
                 try {
-                    const galleryImg = await uploadToCloudinary(file.path, 'students/gallery', 'image');
+                    const galleryImg = await uploadToCloudinaryStream(file.buffer, 'students/gallery', 'image');
                     uploadedGallery.push({
                         url: galleryImg.url,
-                        publicId: galleryImg.publicId
+                        publicId: galleryImg.public_id
                     });
                 } catch (err) {
                     console.error('Gallery image upload failed:', err);
@@ -100,11 +100,11 @@ const addFeaturedStudent = async (req, res) => {
             socials: socialsObj,
             profileImage: {
                 url: uploadedMedia.url,
-                publicId: uploadedMedia.publicId
+                publicId: uploadedMedia.public_id
             },
             experienceVideo: uploadedVideo ? {
                 url: uploadedVideo.url,
-                publicId: uploadedVideo.publicId
+                publicId: uploadedVideo.public_id
             } : null,
             hostelGallery: uploadedGallery
         };
@@ -114,8 +114,8 @@ const addFeaturedStudent = async (req, res) => {
         res.status(201).json(student);
     } catch (error) {
         // Cleanup Cloudinary if DB save fails
-        if (uploadedMedia) await deleteFromCloudinary(uploadedMedia.publicId);
-        if (uploadedVideo) await deleteFromCloudinary(uploadedVideo.publicId, 'video');
+        if (uploadedMedia) await deleteFromCloudinary(uploadedMedia.public_id);
+        if (uploadedVideo) await deleteFromCloudinary(uploadedVideo.public_id, 'video');
         for (const img of uploadedGallery) {
             await deleteFromCloudinary(img.publicId);
         }
@@ -161,10 +161,10 @@ const updateFeaturedStudent = async (req, res) => {
                 await deleteFromCloudinary(student.profileImage.publicId);
             }
             // Upload new image
-            const uploadedMedia = await uploadToCloudinary(req.files['image'][0].path, 'students/profile', 'image');
+            const uploadedMedia = await uploadToCloudinaryStream(req.files['image'][0].buffer, 'students/profile', 'image');
             student.profileImage = {
                 url: uploadedMedia.url,
-                publicId: uploadedMedia.publicId
+                publicId: uploadedMedia.public_id
             };
         }
 
@@ -175,10 +175,10 @@ const updateFeaturedStudent = async (req, res) => {
                 await deleteFromCloudinary(student.experienceVideo.publicId, 'video');
             }
             try {
-                const uploadedVideo = await uploadToCloudinary(req.files['experienceVideo'][0].path, 'students/videos', 'video');
+                const uploadedVideo = await uploadToCloudinaryStream(req.files['experienceVideo'][0].buffer, 'students/videos', 'video');
                 student.experienceVideo = {
                     url: uploadedVideo.url,
-                    publicId: uploadedVideo.publicId
+                    publicId: uploadedVideo.public_id
                 };
             } catch (err) {
                 console.error('Video update failed:', err);
@@ -216,10 +216,10 @@ const updateFeaturedStudent = async (req, res) => {
         if (req.files && req.files['hostelGallery']) {
             for (const file of req.files['hostelGallery']) {
                 try {
-                    const galleryImg = await uploadToCloudinary(file.path, 'students/gallery', 'image');
+                    const galleryImg = await uploadToCloudinaryStream(file.buffer, 'students/gallery', 'image');
                     student.hostelGallery.push({
                         url: galleryImg.url,
-                        publicId: galleryImg.publicId
+                        publicId: galleryImg.public_id
                     });
                 } catch (err) {
                     console.error('Gallery image upload failed:', err);
@@ -336,7 +336,7 @@ const addGalleryItem = async (req, res) => {
         const resourceType = mediaType === 'video' ? 'video' : 'image';
 
         // Upload to Cloudinary
-        uploadedMedia = await uploadToCloudinary(req.file.path, folder, resourceType);
+        uploadedMedia = await uploadToCloudinaryStream(req.file.buffer, folder, resourceType);
 
         const galleryItem = new GalleryItem({
             title,
@@ -344,7 +344,7 @@ const addGalleryItem = async (req, res) => {
             mediaType,
             date,
             mediaUrl: uploadedMedia.url,
-            publicId: uploadedMedia.publicId,
+            publicId: uploadedMedia.public_id,
             uploadedBy: req.user._id
         });
 
@@ -354,7 +354,7 @@ const addGalleryItem = async (req, res) => {
         // Cleanup Cloudinary if DB save fails
         if (uploadedMedia) {
             const resourceType = req.body.mediaType === 'video' ? 'video' : 'image';
-            await deleteFromCloudinary(uploadedMedia.publicId, resourceType);
+            await deleteFromCloudinary(uploadedMedia.public_id, resourceType);
         }
         console.error('Add Gallery Item Error:', error);
         res.status(500).json({ message: error.message || 'Server error' });
@@ -419,10 +419,10 @@ const updateHostelConfig = async (req, res) => {
             if (config.ownerImage && config.ownerImage.publicId) {
                 await deleteFromCloudinary(config.ownerImage.publicId);
             }
-            const uploadedMedia = await uploadToCloudinary(req.files['ownerImage'][0].path, 'hostel/config', 'image');
+            const uploadedMedia = await uploadToCloudinaryStream(req.files['ownerImage'][0].buffer, 'hostel/config', 'image');
             config.ownerImage = {
                 url: uploadedMedia.url,
-                publicId: uploadedMedia.publicId
+                publicId: uploadedMedia.public_id
             };
         }
 
@@ -431,10 +431,10 @@ const updateHostelConfig = async (req, res) => {
             if (config.heroImage && config.heroImage.publicId) {
                 await deleteFromCloudinary(config.heroImage.publicId);
             }
-            const uploadedMedia = await uploadToCloudinary(req.files['heroImage'][0].path, 'hostel/config', 'image');
+            const uploadedMedia = await uploadToCloudinaryStream(req.files['heroImage'][0].buffer, 'hostel/config', 'image');
             config.heroImage = {
                 url: uploadedMedia.url,
-                publicId: uploadedMedia.publicId
+                publicId: uploadedMedia.public_id
             };
         }
 
@@ -453,10 +453,10 @@ const updateHostelConfig = async (req, res) => {
                 await deleteFromCloudinary(config.hostelVideo.publicId, 'video');
             }
             try {
-                const uploadedVideo = await uploadToCloudinary(req.files['hostelVideo'][0].path, 'hostel/config/video', 'video');
+                const uploadedVideo = await uploadToCloudinaryStream(req.files['hostelVideo'][0].buffer, 'hostel/config/video', 'video');
                 config.hostelVideo = {
                     url: uploadedVideo.url,
-                    publicId: uploadedVideo.publicId
+                    publicId: uploadedVideo.public_id
                 };
             } catch (err) {
                 console.error('Hostel Video upload failed:', err);
@@ -473,10 +473,10 @@ const updateHostelConfig = async (req, res) => {
         // Actually, let's just Append any uploaded images to the gallery.
         if (req.files && req.files['landingGallery']) {
             for (const file of req.files['landingGallery']) {
-                const uploadedMedia = await uploadToCloudinary(file.path, 'hostel/config/gallery', 'image');
+                const uploadedMedia = await uploadToCloudinaryStream(file.buffer, 'hostel/config/gallery', 'image');
                 config.landingGallery.push({
                     url: uploadedMedia.url,
-                    publicId: uploadedMedia.publicId
+                    publicId: uploadedMedia.public_id
                 });
             }
         }
@@ -541,7 +541,7 @@ const updateHostelVideo = async (req, res) => {
         }
 
         // Upload to Cloudinary using stream
-        const result = await uploadVideoToCloudinary(req.file.buffer);
+        const result = await uploadToCloudinaryStream(req.file.buffer, 'hostel_video', 'video');
 
         // Update database
         const updatedConfig = await HostelConfig.findOneAndUpdate(

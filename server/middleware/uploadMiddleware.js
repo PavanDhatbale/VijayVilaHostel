@@ -1,29 +1,8 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 
-
-
-const os = require('os');
-
-// Use system temp directory in production (Render), local folder in development to avoid nodemon restarts
-const uploadDir = process.env.NODE_ENV === 'production'
-    ? os.tmpdir()
-    : path.join(__dirname, '../../temp_uploads');
-
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
+// Use memory storage to handle file in Buffer
+// This prevents 'ENOENT' issues on ephemeral filesystems like Render
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image/') ||

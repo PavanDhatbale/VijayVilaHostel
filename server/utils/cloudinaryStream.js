@@ -1,21 +1,31 @@
 const streamifier = require('streamifier');
 const { cloudinary } = require('../config/cloudinary');
 
-const uploadVideoToCloudinary = (buffer) => {
+/**
+ * Upload a buffer to Cloudinary using upload_stream
+ * @param {Buffer} buffer - The file buffer
+ * @param {string} folder - The folder to upload to
+ * @param {string} resourceType - 'image', 'video', or 'auto'
+ * @returns {Promise<Object>} - Cloudinary upload result
+ */
+const uploadToCloudinaryStream = (buffer, folder, resourceType = 'auto') => {
     return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
+        const uploadStream = cloudinary.uploader.upload_stream(
             {
-                resource_type: "video",
-                folder: "hostel_video"
+                folder: `hostel/${folder}`,
+                resource_type: resourceType,
             },
             (error, result) => {
-                if (error) reject(error);
-                else resolve(result);
+                if (error) {
+                    console.error('Cloudinary Stream Upload Error:', error);
+                    return reject(error);
+                }
+                resolve(result);
             }
         );
 
-        streamifier.createReadStream(buffer).pipe(stream);
+        streamifier.createReadStream(buffer).pipe(uploadStream);
     });
 };
 
-module.exports = uploadVideoToCloudinary;
+module.exports = uploadToCloudinaryStream;
