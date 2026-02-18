@@ -51,6 +51,6 @@ router.put('/config', protect, roleMiddleware.authorize('hostelManager'), upload
 router.delete('/config/gallery/:id', protect, roleMiddleware.authorize('hostelManager'), require('../controllers/contentController').deleteLandingGalleryImage);
 
 // Update hostel video (Manager only) - Stream Upload
-router.put('/video', protect, roleMiddleware.authorize('hostelManager'), videoUpload.single('video'), updateHostelVideo);
+router.put('/config/video', protect, roleMiddleware.authorize('hostelManager'), videoUpload.single('video'), updateHostelVideo);
 
 module.exports = router;

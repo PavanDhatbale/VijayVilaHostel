@@ -94,7 +94,7 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
 
                     if (!videoRes.ok) {
                         const errorData = await videoRes.json();
-                        throw new Error(errorData.message || 'Video upload failed');
+                        throw new Error(errorData.error || errorData.message || 'Video upload failed');
                     }
 
                     toast.success('Video uploaded successfully', { id: 'videoUpload' });
@@ -193,8 +193,8 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                     </button>
                 </div>
 
-                <div className="p-8 overflow-y-auto custom-scrollbar">
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+                    <div className="p-8 overflow-y-auto custom-scrollbar flex-1 space-y-6">
 
                         {/* Owner Tab */}
                         {activeTab === 'owner' && (
@@ -419,27 +419,26 @@ const UpdateHostelConfigModal = ({ isOpen, onClose, onConfigUpdated, initialConf
                             </div>
                         )}
 
-                </div>
+                    </div>
 
 
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-6">
-                    <Button type="button" variant="secondary" onClick={onClose} className="px-6 py-3 rounded-xl font-bold">
-                        Cancel
-                    </Button>
-                    <Button
-                        type="submit"
-                        variant="primary"
-                        disabled={loading}
-                        className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200"
-                    >
-                        {loading ? 'Saving...' : 'Save Changes'}
-                    </Button>
-                </div>
-            </form>
+                    <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-6">
+                        <Button type="button" variant="secondary" onClick={onClose} className="px-6 py-3 rounded-xl font-bold">
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            disabled={loading}
+                            className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-200"
+                        >
+                            {loading ? 'Saving...' : 'Save Changes'}
+                        </Button>
+                    </div>
+                </form>
+            </div>
         </div>
-            </div >
-        </div >
     );
 };
 
