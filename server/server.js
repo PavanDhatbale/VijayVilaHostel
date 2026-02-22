@@ -28,7 +28,8 @@ connectDB();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://vijay-vila-hostel.vercel.app"
+  "https://www.vijayvilahostel.in"
+  // "https://vijay-vila-hostel.vercel.app"
 ];
 
 app.use(cors({
