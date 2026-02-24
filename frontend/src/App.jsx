@@ -55,7 +55,7 @@ function App() {
     '/manager-dashboard',
     '/login',
     '/signup',
-    '/verify-email',
+    '/verify',
     '/unauthorized',
     '/attendance',
     '/notices',
@@ -90,7 +90,7 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/verify/:token" element={<VerifyEmail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Login />} />
           <Route path="/gallery" element={<Gallery />} />

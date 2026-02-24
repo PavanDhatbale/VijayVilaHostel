@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { CheckCircle, XCircle, ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // Log to see if this file is even loaded
 console.log('VerifyEmail.jsx file loaded');
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const VerifyEmail = () => {
     console.log('VerifyEmail component rendering');
-    const [searchParams] = useSearchParams();
-    const token = searchParams.get('token');
+    const { token } = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('verifying'); // verifying, success, error
     const [message, setMessage] = useState('');
@@ -31,6 +30,7 @@ const VerifyEmail = () => {
             }
 
             try {
+                // The backend route is /api/auth/verify-email?token=xyz
                 const url = `${API_BASE_URL}/api/auth/verify-email?token=${token}`;
                 console.log('VerifyEmail: Calling API:', url);
                 const response = await fetch(url);
