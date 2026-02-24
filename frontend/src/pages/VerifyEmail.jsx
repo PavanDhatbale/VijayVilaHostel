@@ -6,7 +6,8 @@ import toast from 'react-hot-toast';
 // Log to see if this file is even loaded
 console.log('VerifyEmail.jsx file loaded');
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+// Fallback to empty string for relative paths if VITE_API_BASE_URL is not set
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 const VerifyEmail = () => {
     console.log('VerifyEmail component rendering');
