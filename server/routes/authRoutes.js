@@ -9,6 +9,9 @@ router.post('/signup', signup);
 // @route   GET /api/auth/verify-email
 router.get('/verify-email', verifyEmail);
 
+// @route   GET /api/users/verify/:token
+router.get('/verify/:token', verifyEmail);
+
 // @route   POST /api/auth/login
 router.post('/login', login);
 

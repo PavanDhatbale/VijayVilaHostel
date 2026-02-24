@@ -18,7 +18,26 @@ const Login = () => {
         if (location.pathname === '/signup') {
             setIsLogin(false);
         }
-    }, [location]);
+
+        // Handle verification redirect
+        const params = new URLSearchParams(location.search);
+        const verified = params.get('verified');
+        const error = params.get('error');
+
+        if (verified === 'true') {
+            toast.success('Email verified successfully! You can now login.');
+            setIsLogin(true);
+            // Clean up URL
+            navigate('/login', { replace: true });
+        } else if (verified === 'already') {
+            toast.success('Email already verified. Please login.');
+            setIsLogin(true);
+            navigate('/login', { replace: true });
+        } else if (error) {
+            toast.error(error);
+            navigate(isLogin ? '/login' : '/signup', { replace: true });
+        }
+    }, [location, navigate, isLogin]);
 
     // Form States
     const [formData, setFormData] = useState({

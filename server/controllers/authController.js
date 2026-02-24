@@ -71,25 +71,35 @@ const signup = async (req, res) => {
 // @route   GET /api/auth/verify-email/:token
 // @access  Public
 const verifyEmail = async (req, res) => {
-    const { token } = req.query;
+    // Handle both query param (old way) and path param (new way)
+    const token = req.query.token || req.params.token;
+    const frontendUrl = process.env.FRONTEND_URL || 'https://www.vijayvilahostel.in';
 
     if (!token) {
-        console.log('[Verification] Attempted verification without token query param');
+        console.log('[Verification] Attempted verification without token');
+        if (req.params.token) {
+            return res.redirect(`${frontendUrl}/login?error=Missing token`);
+        }
         return res.status(400).json({ message: 'Missing verification token' });
     }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
         const user = await User.findById(decoded.userId);
 
         if (!user) {
             console.log(`[Verification] User not found for token: ${decoded.userId}`);
+            if (req.params.token) {
+                return res.redirect(`${frontendUrl}/login?error=User not found`);
+            }
             return res.status(404).json({ message: 'User not found' });
         }
 
         if (user.isEmailVerified) {
             console.log(`[Verification] Email already verified for: ${user.email}`);
+            if (req.params.token) {
+                return res.redirect(`${frontendUrl}/login?verified=already`);
+            }
             return res.status(400).json({ message: 'Email already verified' });
         }
 
@@ -97,12 +107,21 @@ const verifyEmail = async (req, res) => {
         await user.save();
 
         console.log(`[Verification] Email verified successfully for: ${user.email}`);
+
+        // If it was a direct link click (path param), redirect to frontend
+        if (req.params.token) {
+            return res.redirect(`${frontendUrl}/login?verified=true`);
+        }
+
         res.status(200).json({
             success: true,
             message: 'Email verified successfully! You can now login.'
         });
     } catch (error) {
         console.error('[Verification Error]:', error.message);
+        if (req.params.token) {
+            return res.redirect(`${frontendUrl}/login?error=Invalid or expired token`);
+        }
         res.status(400).json({ message: 'Invalid or expired token' });
     }
 };
