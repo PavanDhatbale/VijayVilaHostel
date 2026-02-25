@@ -31,8 +31,8 @@ const VerifyEmail = () => {
             }
 
             try {
-                // The backend route is /api/auth/verify-email?token=xyz
-                const url = `${API_BASE_URL}/api/auth/verify-email?token=${token}`;
+                // The backend route is /api/users/verify/:token
+                const url = `${API_BASE_URL}/api/users/verify/${token}`;
                 console.log('VerifyEmail: Calling API:', url);
                 const response = await fetch(url);
                 const data = await response.json();
