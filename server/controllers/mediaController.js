@@ -26,7 +26,7 @@ const uploadMedia = async (req, res) => {
         const media = await Media.create({
             student: req.user._id,
             mediaType,
-            mediaUrl: uploadResult.url,
+            mediaUrl: uploadResult.secure_url,
             publicId: uploadResult.public_id,
             caption: caption || ''
         });
@@ -117,7 +117,7 @@ const uploadProfileImage = async (req, res) => {
         // The frontend will save this URL to the User profile
         res.status(200).json({
             message: 'Image uploaded successfully',
-            url: uploadResult.url,
+            url: uploadResult.secure_url,
             publicId: uploadResult.public_id
         });
     } catch (error) {

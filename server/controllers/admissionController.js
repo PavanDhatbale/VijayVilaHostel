@@ -38,7 +38,7 @@ const applyForAdmission = async (req, res) => {
         const uploadDoc = async (file) => {
             const result = await uploadToCloudinaryStream(file.buffer, 'admissions', 'auto');
             return {
-                url: result.url,
+                url: result.secure_url,
                 publicId: result.public_id
             };
         };
