@@ -40,7 +40,7 @@ const FileUpload = ({ label, id, required = false, fileName, onFileChange }) => 
                             <Upload className="h-6 w-6 text-gray-400 group-hover:text-blue-600" />
                         </div>
                         <p className="text-sm font-medium text-blue-600 mb-1">Click to upload or drag & drop</p>
-                        <p className="text-xs text-gray-500">PDF, PNG, or JPG (Max file size 2MB)</p>
+                        <p className="text-xs text-gray-500">PNG or JPG (Max file size 2MB)</p>
                     </div>
                 )}
                 <input
@@ -49,7 +49,7 @@ const FileUpload = ({ label, id, required = false, fileName, onFileChange }) => 
                     id={id}
                     ref={inputRef}
                     onChange={(e) => onFileChange(id, e)}
-                    accept=".pdf,.png,.jpg,.jpeg"
+                    accept="image/png, image/jpeg, image/jpg"
                 />
             </div>
         </div>
@@ -62,6 +62,11 @@ const DocumentUpload = ({ formData, setFiles, files, handleSubmit, prevStep }) =
     const handleFileChange = (id, e) => {
         const file = e.target.files[0];
         if (file) {
+            // Check file type
+            if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.mimetype)) {
+                toast.error('Only JPG and PNG images are allowed');
+                return;
+            }
             // Check file size (2MB)
             if (file.size > 2 * 1024 * 1024) {
                 toast.error('File size should not exceed 2MB');
