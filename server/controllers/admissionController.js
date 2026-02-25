@@ -36,9 +36,18 @@ const applyForAdmission = async (req, res) => {
 
         // Helper to upload file and return object
         const uploadDoc = async (file) => {
-            const isPdf = file.mimetype === 'application/pdf';
+            const originalName = file.originalname || 'document';
+            const isPdf = file.mimetype === 'application/pdf' || originalName.toLowerCase().endsWith('.pdf');
+
+            // Slugify filename: remove special chars, replace spaces with hyphens
+            const sanitizedName = originalName
+                .split('.')[0] // Remove extension
+                .replace(/[^a-zA-Z0-9]/g, '-') // Replace non-alphanumeric with hyphen
+                .replace(/-+/g, '-') // Remove double hyphens
+                .toLowerCase();
+
             const resourceType = isPdf ? 'raw' : 'auto';
-            const publicId = isPdf ? `${Date.now()}-${file.originalname}` : null;
+            const publicId = isPdf ? `${Date.now()}-${sanitizedName}.pdf` : null;
 
             const result = await uploadToCloudinaryStream(
                 file.buffer,
