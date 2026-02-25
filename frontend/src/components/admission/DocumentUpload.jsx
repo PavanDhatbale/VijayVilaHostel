@@ -49,7 +49,7 @@ const FileUpload = ({ label, id, required = false, fileName, onFileChange }) => 
                     id={id}
                     ref={inputRef}
                     onChange={(e) => onFileChange(id, e)}
-                    accept="image/png, image/jpeg, image/jpg"
+                    accept=".jpg,.jpeg,.png,image/jpeg,image/png"
                 />
             </div>
         </div>
@@ -62,9 +62,15 @@ const DocumentUpload = ({ formData, setFiles, files, handleSubmit, prevStep }) =
     const handleFileChange = (id, e) => {
         const file = e.target.files[0];
         if (file) {
-            // Check file type
-            if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.mimetype)) {
-                toast.error('Only JPG and PNG images are allowed');
+            const isImage = [
+                'image/jpeg',
+                'image/jpg',
+                'image/png',
+                'image/pjpeg'
+            ].includes(file.type) || /\.(jpg|jpeg|png)$/i.test(file.name);
+
+            if (!isImage) {
+                toast.error('Only JPG, JPEG and PNG images are allowed');
                 return;
             }
             // Check file size (2MB)
