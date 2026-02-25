@@ -60,6 +60,25 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const verifyEmail = async (token) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/auth/verify-email?token=${token}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                // If the backend returns a specific already verified message, treat it as a success for smoother UX
+                if (data.message === 'Email already verified') {
+                    return { success: true, message: data.message };
+                }
+                throw new Error(data.message || 'Verification failed');
+            }
+
+            return { success: true, message: data.message };
+        } catch (error) {
+            throw error;
+        }
+    };
+
     const signup = async (userData) => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
@@ -113,6 +132,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         signup,
+        verifyEmail,
         logout,
         refreshProfile,
         isAuthenticated: !!user,

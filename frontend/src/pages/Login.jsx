@@ -9,7 +9,8 @@ import { Mail, Lock, User, Briefcase, ArrowRight, UserCheck, ArrowLeft } from 'l
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { login, signup } = useAuth();
+    const { login, signup, verifyEmail } = useAuth();
+    const verificationProcessed = React.useRef(false);
 
     // Determine initial mode based on route or state
     const [isLogin, setIsLogin] = useState(true);
@@ -19,15 +20,35 @@ const Login = () => {
             setIsLogin(false);
         }
 
-        // Handle verification redirect
+        const handleVerification = async (token) => {
+            if (verificationProcessed.current) return;
+            verificationProcessed.current = true;
+
+            try {
+                const result = await verifyEmail(token);
+                if (result.success) {
+                    toast.success(result.message || 'Email verified successfully! You can now login.');
+                    setIsLogin(true);
+                    // Clear the token from URL
+                    navigate('/login', { replace: true });
+                }
+            } catch (error) {
+                toast.error(error.message || 'Verification failed');
+                navigate('/login', { replace: true });
+            }
+        };
+
+        // Handle verification from URL params
         const params = new URLSearchParams(location.search);
         const verified = params.get('verified');
         const error = params.get('error');
+        const token = params.get('token');
 
-        if (verified === 'true') {
+        if (token) {
+            handleVerification(token);
+        } else if (verified === 'true') {
             toast.success('Email verified successfully! You can now login.');
             setIsLogin(true);
-            // Clean up URL
             navigate('/login', { replace: true });
         } else if (verified === 'already') {
             toast.success('Email already verified. Please login.');
@@ -37,7 +58,7 @@ const Login = () => {
             toast.error(error);
             navigate(isLogin ? '/login' : '/signup', { replace: true });
         }
-    }, [location, navigate, isLogin]);
+    }, [location, navigate, isLogin, verifyEmail]);
 
     // Form States
     const [formData, setFormData] = useState({

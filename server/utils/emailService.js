@@ -17,7 +17,7 @@ const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
  */
 const sendVerificationEmail = async (userEmail, token) => {
     const frontendUrl = process.env.FRONTEND_URL || 'https://www.vijayvilahostel.in';
-    const verificationUrl = `${frontendUrl}/verify/${token}`;
+    const verificationUrl = `${frontendUrl}/login?token=${token}`;
 
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
     sendSmtpEmail.subject = "Verify your email – Vijay Vila Hostel";
