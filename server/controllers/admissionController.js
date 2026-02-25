@@ -36,7 +36,17 @@ const applyForAdmission = async (req, res) => {
 
         // Helper to upload file and return object
         const uploadDoc = async (file) => {
-            const result = await uploadToCloudinaryStream(file.buffer, 'admissions', 'auto');
+            const isPdf = file.mimetype === 'application/pdf';
+            const resourceType = isPdf ? 'raw' : 'auto';
+            const publicId = isPdf ? `${Date.now()}-${file.originalname}` : null;
+
+            const result = await uploadToCloudinaryStream(
+                file.buffer,
+                'admissions',
+                resourceType,
+                publicId
+            );
+
             return {
                 url: result.secure_url,
                 publicId: result.public_id

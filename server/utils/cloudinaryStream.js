@@ -8,13 +8,19 @@ const { cloudinary } = require('../config/cloudinary');
  * @param {string} resourceType - 'image', 'video', or 'auto'
  * @returns {Promise<Object>} - Cloudinary upload result
  */
-const uploadToCloudinaryStream = (buffer, folder, resourceType = 'auto') => {
+const uploadToCloudinaryStream = (buffer, folder, resourceType = 'auto', publicId = null) => {
     return new Promise((resolve, reject) => {
+        const options = {
+            folder: `hostel/${folder}`,
+            resource_type: resourceType,
+        };
+
+        if (publicId) {
+            options.public_id = publicId;
+        }
+
         const uploadStream = cloudinary.uploader.upload_stream(
-            {
-                folder: `hostel/${folder}`,
-                resource_type: resourceType,
-            },
+            options,
             (error, result) => {
                 if (error) {
                     console.error('Cloudinary Stream Upload Error:', error);
