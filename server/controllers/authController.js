@@ -71,16 +71,21 @@ const signup = async (req, res) => {
 // @route   GET /api/auth/verify-email/:token
 // @access  Public
 const verifyEmail = async (req, res) => {
-    // Handle both query param (old way) and path param (new way)
     const token = req.query.token || req.params.token;
     const frontendUrl = process.env.FRONTEND_URL || 'https://www.vijayvilahostel.in';
 
     if (!token) {
         console.log('[Verification] Attempted verification without token');
-        if (req.params.token) {
-            return res.redirect(`${frontendUrl}/login?error=Missing token`);
-        }
-        return res.status(400).json({ message: 'Missing verification token' });
+        return res.status(400).send(`
+            <html>
+                <body>
+                    <script>
+                        alert("Missing verification token");
+                        window.location.href = "${frontendUrl}/login?error=Missing token";
+                    </script>
+                </body>
+            </html>
+        `);
     }
 
     try {
@@ -89,18 +94,28 @@ const verifyEmail = async (req, res) => {
 
         if (!user) {
             console.log(`[Verification] User not found for token: ${decoded.userId}`);
-            if (req.params.token) {
-                return res.redirect(`${frontendUrl}/login?error=User not found`);
-            }
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).send(`
+                <html>
+                    <body>
+                        <script>
+                            window.location.href = "${frontendUrl}/login?error=User not found";
+                        </script>
+                    </body>
+                </html>
+            `);
         }
 
         if (user.isEmailVerified) {
             console.log(`[Verification] Email already verified for: ${user.email}`);
-            if (req.params.token) {
-                return res.redirect(`${frontendUrl}/login?verified=already`);
-            }
-            return res.status(400).json({ message: 'Email already verified' });
+            return res.send(`
+                <html>
+                    <body>
+                        <script>
+                            window.location.href = "${frontendUrl}/login?verified=already";
+                        </script>
+                    </body>
+                </html>
+            `);
         }
 
         user.isEmailVerified = true;
@@ -108,21 +123,33 @@ const verifyEmail = async (req, res) => {
 
         console.log(`[Verification] Email verified successfully for: ${user.email}`);
 
-        // If it was a direct link click (path param), redirect to frontend
-        if (req.params.token) {
-            return res.redirect(`${frontendUrl}/login?verified=true`);
-        }
-
-        res.status(200).json({
-            success: true,
-            message: 'Email verified successfully! You can now login.'
-        });
+        // Robust JS-based redirect to frontend
+        return res.send(`
+            <html>
+                <body style="font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f9fafb;">
+                    <div style="text-align: center;">
+                        <h2 style="color: #1e40af;">Email Verified Successfully!</h2>
+                        <p>Redirecting you to login page...</p>
+                        <script>
+                            setTimeout(function() {
+                                window.location.href = "${frontendUrl}/login?verified=true";
+                            }, 500);
+                        </script>
+                    </div>
+                </body>
+            </html>
+        `);
     } catch (error) {
         console.error('[Verification Error]:', error.message);
-        if (req.params.token) {
-            return res.redirect(`${frontendUrl}/login?error=Invalid or expired token`);
-        }
-        res.status(400).json({ message: 'Invalid or expired token' });
+        return res.status(400).send(`
+            <html>
+                <body>
+                    <script>
+                        window.location.href = "${frontendUrl}/login?error=Invalid or expired token";
+                    </script>
+                </body>
+            </html>
+        `);
     }
 };
 

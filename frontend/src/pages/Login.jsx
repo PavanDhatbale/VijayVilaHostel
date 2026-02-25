@@ -9,8 +9,7 @@ import { Mail, Lock, User, Briefcase, ArrowRight, UserCheck, ArrowLeft } from 'l
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { login, signup, verifyEmail } = useAuth();
-    const verificationProcessed = React.useRef(false);
+    const { login, signup } = useAuth();
 
     // Determine initial mode based on route or state
     const [isLogin, setIsLogin] = useState(true);
@@ -20,33 +19,12 @@ const Login = () => {
             setIsLogin(false);
         }
 
-        const handleVerification = async (token) => {
-            if (verificationProcessed.current) return;
-            verificationProcessed.current = true;
-
-            try {
-                const result = await verifyEmail(token);
-                if (result.success) {
-                    toast.success(result.message || 'Email verified successfully! You can now login.');
-                    setIsLogin(true);
-                    // Clear the token from URL
-                    navigate('/login', { replace: true });
-                }
-            } catch (error) {
-                toast.error(error.message || 'Verification failed');
-                navigate('/login', { replace: true });
-            }
-        };
-
-        // Handle verification from URL params
+        // Handle verification from URL params (set by backend redirect)
         const params = new URLSearchParams(location.search);
         const verified = params.get('verified');
         const error = params.get('error');
-        const token = params.get('token');
 
-        if (token) {
-            handleVerification(token);
-        } else if (verified === 'true') {
+        if (verified === 'true') {
             toast.success('Email verified successfully! You can now login.');
             setIsLogin(true);
             navigate('/login', { replace: true });
@@ -58,7 +36,7 @@ const Login = () => {
             toast.error(error);
             navigate(isLogin ? '/login' : '/signup', { replace: true });
         }
-    }, [location, navigate, isLogin, verifyEmail]);
+    }, [location, navigate, isLogin]);
 
     // Form States
     const [formData, setFormData] = useState({

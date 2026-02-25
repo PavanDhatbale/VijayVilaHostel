@@ -12,6 +12,9 @@ router.get('/verify-email', verifyEmail);
 // @route   GET /api/users/verify/:token
 router.get('/verify/:token', verifyEmail);
 
+// @route   GET /api/auth/verify
+router.get('/verify', verifyEmail);
+
 // @route   POST /api/auth/login
 router.post('/login', login);
 
