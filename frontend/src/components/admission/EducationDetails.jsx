@@ -72,6 +72,10 @@ const EducationDetails = ({ formData, handleChange, nextStep, prevStep }) => {
                             <option value="Police Bharati">Police Bharati</option>
                             <option value="Engineering">Engineering</option>
                             <option value="Medical">Medical</option>
+                            <option value="CA & CMA">CA & CMA</option>
+                            <option value="MBA">MBA</option>
+                            <option value="GOVERNMENT EXAMS">GOVERNMENT EXAMS</option>
+                            <option value="OTHER">OTHER</option>
                             <option value="Both">Both MPSC & UPSC</option>
                         </select>
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
